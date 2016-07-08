@@ -1,0 +1,18 @@
+dependencies: []
+
+galaxy_info:
+  author: vkill
+  description: incron
+  company: vkill
+
+  license: license ((BSD, MIT))
+
+  min_ansible_version: 1.8
+
+  platforms:
+  - name: Ubuntu
+    versions:
+    - trusty
+
+  galaxy_tags:
+    - incron
