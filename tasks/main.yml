@@ -1,1 +1,25 @@
 ---
+- name: Include OS-specific variables.
+  include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Install Incron (RedHat).
+  yum: name=incron state=installed
+  when: ansible_os_family == 'RedHat'
+
+- name: Install Incron (Debian).
+  apt: name=incron state=installed
+  when: ansible_os_family == 'Debian'
+
+- name: Ensure Incron is running and enabled as configured.
+  service:
+    name: "{{ incron_daemon }}"
+    state: started
+    enabled: yes
+  when: incron_enabled
+
+- name: Ensure Incron is stopped and disabled as configured.
+  service:
+    name: "{{ incron_daemon }}"
+    state: stopped
+    enabled: no
+  when: not incron_enabled
