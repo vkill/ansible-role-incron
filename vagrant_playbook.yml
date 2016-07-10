@@ -1,0 +1,7 @@
+---
+- name: Test ansible-role-incron
+  hosts: all
+  become: true
+
+  roles:
+    - role: .

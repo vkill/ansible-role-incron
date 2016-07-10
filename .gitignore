@@ -1,0 +1,6 @@
+
+/*.box
+/.vagrant/
+/*.retry
+/tests/*.retry
+
