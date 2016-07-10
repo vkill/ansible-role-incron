@@ -4,11 +4,14 @@
 
 - name: Install Incron (RedHat).
   yum: name=incron state=installed
-  when: ansible_os_family == 'RedHat'
+  when: (incron_install_from_source == false) and (ansible_os_family == 'RedHat')
 
 - name: Install Incron (Debian).
   apt: name=incron state=installed
-  when: ansible_os_family == 'Debian'
+  when: (incron_install_from_source == false) and (ansible_os_family == 'Debian')
+
+- include: install-from-source.yml
+  when: incron_install_from_source == true
 
 - name: Ensure Incron is running and enabled as configured.
   service:

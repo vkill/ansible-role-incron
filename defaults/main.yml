@@ -1,5 +1,19 @@
 ---
 incron_enabled: true
 
+workspace: /root
+
+incron_install_from_source: false
+incron_install_path: "/usr"
+incron_source_version: "0.5.12"
+
+# If incron is already installed at and older version, force a new source build.
+# Only applies if incron_install_from_source is `true`.
+incron_install_from_source_force_update: false
+
+# Leave this at it's default.
+incron_reinstall_from_source: false
+
+
 incron_system_tables_dir: "/etc/incron.d/"
 incron_system_tables: []

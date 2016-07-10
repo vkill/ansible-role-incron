@@ -1,0 +1,56 @@
+---
+- name: Ensure incron's dependencies are installed (RedHat).
+  yum: "pkg={{ item }} state=installed"
+  with_items:
+    - make
+    - gcc
+  when: ansible_os_family == 'RedHat'
+
+- name: Ensure incron's dependencies are installed (Debian).
+  apt: "pkg={{ item }} state=installed"
+  with_items:
+    - build-essential
+  when: ansible_os_family == 'Debian'
+
+- name: Get installed version
+  command: incrond -V
+  changed_when: false
+  failed_when: false
+  register: incron_installed_version
+
+- name: Force incron install if the version numbers do not match
+  set_fact:
+    incron_reinstall_from_source: true
+  when: 'incron_install_from_source_force_update and (incron_installed_version|success and (incron_installed_version.stderr | regex_replace("^.*?([0-9\.]+)$", "\\1") | version_compare(incron_source_version, operator="!=")))'
+
+- name: Download incron
+  get_url:
+    url: "https://github.com/ar-/incron/archive/{{ incron_source_version }}.tar.gz"
+    dest: "{{ workspace }}/incron-{{ incron_source_version }}.tar.gz"
+    validate_certs: no
+  when:  incron_installed_version|failed or incron_reinstall_from_source
+
+- name: Expand incron archive
+  unarchive:
+    src: "{{ workspace }}/incron-{{ incron_source_version }}.tar.gz"
+    dest: "{{ workspace }}"
+    creates: "{{ workspace }}/incron-{{ incron_source_version }}/README"
+    copy: no
+  when:  incron_installed_version|failed or incron_reinstall_from_source
+
+- name: Replace Makefile PREFIX
+  lineinfile:
+    dest: "{{ workspace }}/incron-{{ incron_source_version }}/Makefile"
+    regexp: "^PREFIX = /usr/local$"
+    line: "PREFIX = {{ incron_install_path }}"
+  when:  incron_installed_version|failed or incron_reinstall_from_source
+
+- name: Build incron
+  command: >
+    make prefix={{ incron_install_path }} {{ item }}
+    chdir={{ workspace }}/incron-{{ incron_source_version }}
+  with_items:
+    - all
+    - install
+  when:  incron_installed_version|failed or incron_reinstall_from_source
+  become: yes
