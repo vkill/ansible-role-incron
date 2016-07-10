@@ -1,5 +1,36 @@
 ---
-- hosts: localhost
-  remote_user: root
+- hosts: all
+  become: true
+
+  pre_tasks:
+    - name: Touch script.sh for user
+      file:
+        path: /tmp/incron_demo.sh
+        state: touch
+        mode: "u=rwx,g=rx,o=rx"
+    - name: Fill content to script.sh for demo
+      lineinfile:
+        dest: /tmp/incron_demo.sh
+        line: "echo user $1 $2 >> /tmp/incron_demo_system_table.log"
+
   roles:
     - ansible-role-incron
+      incron_install_from_source: true
+      incron_install_from_source_force_update: true
+      incron_system_tables:
+        - name: demo
+          path: /home/
+          mask: IN_CREATE,IN_DELETE
+          command: /tmp/incron_demo.sh $# $%
+
+  post_tasks:
+    - name: Create user for demo
+      user:
+        name: incron_demo
+        append: yes
+
+    - name: Remove user for demo
+      user:
+        name: incron_demo
+        state: absent
+        remove: yes
