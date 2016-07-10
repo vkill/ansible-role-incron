@@ -29,8 +29,6 @@ Example Playbook
 
   roles:
     - role: vkill.incron
-      incron_install_from_source: true
-      incron_install_from_source_force_update: true
       incron_system_tables:
         - name: demo
           path: /home/
