@@ -10,8 +10,11 @@
   apt: name=incron state=installed
   when: (incron_install_from_source == false) and (ansible_os_family == 'Debian')
 
-- include: install-from-source.yml
-  when: incron_install_from_source == true
+#
+# NOTICE: disable install from source
+#
+# - include: install-from-source.yml
+#   when: incron_install_from_source == true
 
 - name: Ensure Incron is running and enabled as configured.
   service:
