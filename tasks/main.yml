@@ -3,11 +3,11 @@
   include_vars: "{{ ansible_os_family }}.yml"
 
 - name: Install Incron (RedHat).
-  yum: name=incron state=installed
+  yum: name=incron state=present
   when: (incron_install_from_source == false) and (ansible_os_family == 'RedHat')
 
 - name: Install Incron (Debian).
-  apt: name=incron state=installed
+  apt: name=incron state=present
   when: (incron_install_from_source == false) and (ansible_os_family == 'Debian')
 
 #
