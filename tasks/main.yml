@@ -39,4 +39,14 @@
   notify:
    - restart incron
 
-
+- name: Setup incron user tables
+  template:
+    src: user_incrontab.j2
+    dest: "{{ incron_user_tables_dir }}{{ item.username }}"
+    owner: "{{ item.username }}"
+    group: incron
+    mode: 0664
+  with_items: "{{ incron_user_tables }}"
+  when: incron_user_tables is defined
+  notify:
+    - restart incron
