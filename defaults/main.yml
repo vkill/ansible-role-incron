@@ -17,3 +17,6 @@ incron_reinstall_from_source: false
 
 incron_system_tables_dir: "/etc/incron.d/"
 incron_system_tables: []
+
+incron_user_tables_dir: "/var/spool/incron/"
+incron_user_tables: []

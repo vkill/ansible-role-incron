@@ -23,6 +23,8 @@ None.
 Example Playbook
 ----------------
 
+### with system tables
+
 ```yaml
 - hosts: servers
   become: true
@@ -37,6 +39,28 @@ Example Playbook
 ```
 
 [detailed example](vagrant_playbook.yml)
+
+### with user tables
+
+```yaml
+- hosts: servers
+  become: true
+
+  roles:
+    - role: vkill.incron
+      incron_user_tables:
+        - username: demo
+          lines:
+            - name: demo
+              path: /home/demo/dir1
+              mask: IN_CREATE,IN_DELETE
+              command: /tmp/incron_demo.sh $# $%
+
+            - name: demo_2
+              path: /home/demo/dir2
+              mask: IN_CREATE,IN_DELETE
+              command: /tmp/incron_demo.sh $# $%
+```
 
 Local Testing with Vagrant
 ----------------
