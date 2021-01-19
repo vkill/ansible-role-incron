@@ -20,3 +20,7 @@ incron_system_tables: []
 
 incron_user_tables_dir: "/var/spool/incron/"
 incron_user_tables: []
+
+incron_manage_allowdenylist: false
+incron_users_allowed: []
+incron_users_denied: []
