@@ -50,3 +50,29 @@
   when: incron_user_tables is defined
   notify:
     - restart incron
+
+- name: Configure allow list
+  copy:
+    dest: /etc/incron.allow
+    owner: root
+    group: incron
+    mode: 0640
+    content: "{{ incron_users_allowed | join('\n') }}{{ add_nl }}"
+  when: incron_manage_allowdenylist
+  vars:
+    add_nl: "{{ (incron_users_allowed|length == 0) | ternary('','\n') }}"
+  notify:
+    - restart incron
+
+- name: Configure deny list
+  copy:
+    dest: /etc/incron.deny
+    owner: root
+    group: incron
+    mode: 0640
+    content: "{{ incron_users_denied | join('\n') }}{{ add_nl }}"
+  when: incron_manage_allowdenylist
+  vars:
+    add_nl: "{{ (incron_users_denied|length == 0) | ternary('','\n') }}"
+  notify:
+    - restart incron
